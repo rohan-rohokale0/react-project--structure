@@ -8,6 +8,9 @@ import Home from './Pages/Home';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './Pages/Layout/MainLayout';
 import CategoryList from './Pages/Category/Category_List';
+import ProductList from './Pages/Product/product_list';
+import AddProduct from './Pages/Product/add-product';
+import UpdateProduct from './Pages/Product/update_product';
 
 class App extends Component {
   render() {
@@ -24,6 +27,9 @@ class App extends Component {
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path='category-list' element={< CategoryList />}></Route>
+          <Route path='product-list' element={< ProductList />}></Route>
+          <Route path="product-list/add-product" element={<AddProduct />}></Route>
+                {/* <Route path="update-product" element={<UpdateProduct />}></Route> */}
         </Route>
       </Routes>
     </Router>

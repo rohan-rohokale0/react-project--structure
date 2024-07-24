@@ -7,7 +7,7 @@ import axios, { AxiosError } from "axios";
 import { apiURL } from "../../Constant/ApiUrlConstant";
 import AddCategoryDialog from "./add_category";
 import { Edit, RemoveRedEyeRounded } from "@mui/icons-material";
-import { Box, Button, Card, CardHeader, Grid, IconButton, styled, Typography } from '@mui/material'
+import { Box, Button, Card, CardHeader, Divider, Grid, IconButton, styled, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer'
@@ -24,15 +24,6 @@ export interface CategoryViewModel {
   subCategoryName: string;
 }
 
-// const StyledTable = styled(Table)(() => ({
-//   whiteSpace: "pre",
-//   "& thead": {
-//     "& tr": { "& th": { paddingLeft: 0, paddingRight: 0 } },
-//   },
-//   "& tbody": {
-//     "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
-//   },
-// }));
 const HR = styled("hr")(({ theme }) => ({
   // margin: "10px 0px 24px",
   flexShrink: "0",
@@ -122,7 +113,8 @@ export default function CategoryList() {
               Add Category
             </Button>
           </Box>
-          
+          <Divider />
+
           <AddCategoryDialog
             open={isDialogOpen}
             onClose={handleCloseDialog} onAddCategory={function (categoryName: string): void {
@@ -144,7 +136,7 @@ export default function CategoryList() {
                 <TableBody className="transactionTable-tablebody">
                   {categorysList.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={3}>
+                      <TableCell colSpan={5}>
                         <Typography
                           variant="subtitle1"
                           color="textSecondary"

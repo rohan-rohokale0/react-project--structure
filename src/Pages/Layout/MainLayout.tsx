@@ -100,7 +100,7 @@ const MainLayout: React.FC = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            Responsive Layout
+            Responsive smart dash
           </Typography>
         </Toolbar>
       </AppBar>

@@ -546,8 +546,6 @@ export default function AddProduct() {
             />
           </Box>
           <Divider />
-
-
           <form onSubmit={formik.handleSubmit}>
             <Grid container spacing={1}>
               <Grid item sm={6} xs={12}>

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useTheme, Box, CssBaseline, AppBar, Toolbar, IconButton, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Menu, MenuItem, Avatar } from '@mui/material';
+import { useTheme, Box, CssBaseline, AppBar, Toolbar, IconButton, Drawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Menu, MenuItem } from '@mui/material';
 import { Menu as MenuIcon, Dashboard as DashboardIcon, Category as CategoryIcon, Person as PersonIcon, ExitToApp as ExitToAppIcon, AccountCircle } from '@mui/icons-material';
 import { NavLink, Outlet } from 'react-router-dom';
 import Footer from './Footer';
 import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
-
+import Person2Icon from '@mui/icons-material/Person2';
+import GroupIcon from '@mui/icons-material/Group';
 const drawerWidth = 240;
 
 const MainLayout: React.FC = () => {
@@ -38,6 +39,7 @@ const MainLayout: React.FC = () => {
                     { text: 'Dashboard', icon: <DashboardIcon />, path: '/home/dashboard' },
                     { text: 'Category', icon: <CategoryIcon />, path: '/home/category-list' },
                     { text: 'Product', icon: <ProductionQuantityLimitsTwoToneIcon />, path: '/home/product-list' },
+                    { text: 'User', icon: <GroupIcon />, path: '/home/user-list' }
                 ].map((item) => (
                     <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
@@ -48,8 +50,12 @@ const MainLayout: React.FC = () => {
                                 justifyContent: 'initial',
                                 px: 2.5,
                                 '&.active': {
-                                    backgroundColor: theme.palette.action.selected,
+                                    backgroundColor: "rgba(224, 224, 224, 1)",
                                     color: theme.palette.primary.main,
+                                    borderRadius: 1,
+                                    '& .MuiListItemIcon-root': {
+                                        color: theme.palette.primary.main,
+                                    },
                                 },
                             }}
                             onClick={() => setMobileOpen(false)}
@@ -74,8 +80,8 @@ const MainLayout: React.FC = () => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <CssBaseline />
-            <AppBar position="fixed">
-                <Toolbar>
+            <AppBar position="fixed" sx={{ height: 55 }}>
+                <Toolbar sx={{ height: 50 }}> {/* Set fixed height */}
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -86,9 +92,8 @@ const MainLayout: React.FC = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-                        Responsive smart dash
+                        Responsive Smart Dash
                     </Typography>
-
                     <Box sx={{ display: { xs: "none", md: "flex" } }}>
                         <p>Rohan Rohokale</p>
                         <IconButton
@@ -96,7 +101,7 @@ const MainLayout: React.FC = () => {
                             onClick={handleMenuOpen}
                             sx={{ ml: 2 }}
                         >
-                            <AccountCircle></AccountCircle>
+                            <AccountCircle />
                         </IconButton>
                         <Menu
                             anchorEl={anchorEl}
@@ -113,7 +118,6 @@ const MainLayout: React.FC = () => {
                             </MenuItem>
                         </Menu>
                     </Box>
-
                 </Toolbar>
             </AppBar>
             <Box sx={{ display: 'flex', flex: 1 }}>
@@ -145,7 +149,7 @@ const MainLayout: React.FC = () => {
                             '& .MuiDrawer-paper': {
                                 boxSizing: 'border-box',
                                 width: drawerWidth,
-                                mt: '11vh', // Apply margin-top of 11vh only for desktop
+                                mt: '3.9%', // Apply margin-top of 11vh only for desktop
                             },
                         }}
                         open

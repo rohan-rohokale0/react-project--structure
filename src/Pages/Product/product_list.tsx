@@ -26,19 +26,28 @@ import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "../../Services/httpservice";
 import axios, { AxiosError } from "axios";
 import styled from "@emotion/styled";
-import { string } from "yup";
-import { get } from "http";
-import EditIcon from '@mui/icons-material/Edit';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Loader from "../../Components/Carousel/loader";
 import { Edit, RemoveRedEyeRounded } from "@mui/icons-material";
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import HomeIcon from '@mui/icons-material/Home';
+import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
+import { apiURL } from "../../Constant/ApiUrlConstant";
+import DeleteProductDialog from "./delete_product";
 
 export interface MerchantMasterViewModel {
-  id: number;
+
+  productId: string;
   productName: string;
+  productCode: string;
+  productPrice: number;
+  productSalePrice: number;
+  productQTY: number;
+  productDescription: string;
+  productImage: string;
+  categoryId: string;
   categoryName: string;
-  status: boolean;
-  productImage: any;
+  subCategoryName: string;
 }
 
 
@@ -53,6 +62,8 @@ export default function ProductList() {
   const handleChangePage = (_: any, newPage: React.SetStateAction<number>) => {
     setPage(newPage);
   };
+  const [isCategoryDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
   const handleChangeRowsPerPage = (event: {
     target: { value: string | number };
@@ -86,7 +97,7 @@ export default function ProductList() {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
       const response = await getRequest(
-        "http://localhost:5454/api/product/get-product"
+        process.env.REACT_APP_API_URL + apiURL.GET_PRODUCT
       );
       if (response == null) throw new Error(`HTTP error! Status`);
 
@@ -125,101 +136,52 @@ export default function ProductList() {
     }
   };
 
+  const handleDeletCategoryOpenDialog = (id: string) => {
+    setSelectedCategoryId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeletCategoryCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedCategoryId(null);
+    if (isCategoryDeleteDialogOpen) {
+      getTransactionDetails();
+    }
+  };
+
+
   return (
-    // <div>
-    //   {isLoading && <Loader />}
-    //   <Card variant="outlined" sx={{ p: 2, mb: 20 }}>
-    //     <Grid container sx={{ mt: 2 }} justifyContent={"space-between"}>
-    //       <Grid>
-    //         <Typography variant="h6">Product</Typography>
-    //       </Grid>
-    //       <Grid item justifyContent={"flex-end"}>
-    //         <Button variant="contained" onClick={navigateToAddProduct}>
-    //           Add Product
-    //         </Button>
-    //       </Grid>
-    //     </Grid>
-
-    //     <Divider sx={{ mt: 2 }}></Divider>
-    //     <Box width="100%" overflow="auto">
-
-    //       <TableHead>
-    //         <TableRow>
-    //           <TableCell align="left">Id</TableCell>
-    //           <TableCell align="center">Category Name</TableCell>
-    //           <TableCell align="center">Product Image</TableCell>
-    //           <TableCell align="center">Product Name</TableCell>
-    //           <TableCell align="center">Status</TableCell>
-    //           <TableCell align="center">Action</TableCell>
-    //         </TableRow>
-    //       </TableHead>
-    //       <TableBody className="transactionTable-tablebody">
-    //         {(rowsPerPage > 0
-    //           ? merchantDetailsList.slice(
-    //             page * rowsPerPage,
-    //             page * rowsPerPage + rowsPerPage
-    //           )
-    //           : merchantDetailsList
-    //         ).map((row: any, index: any) => (
-
-
-
-
-    //           <TableRow key={index}>
-    //             <TableCell align="left">{row.id}</TableCell>
-    //             <TableCell align="center">{row.categoryName}</TableCell>
-    //             <TableCell align="center">
-    //               {
-    //                 <img
-    //                   style={{ height: "5vh" }}
-    //                   src={row.productImage}
-    //                 />
-    //               }
-    //             </TableCell>
-    //             <TableCell align="center">{row.productName}</TableCell>
-    //             <TableCell align="center">
-    //               {getStatusValue(row.status)}
-    //             </TableCell>
-    //             <TableCell align="center">
-    //               <IconButton aria-label="Edit" color="primary" onClick={() => navigateToUpdateProduct(row.id)}>
-    //                 <EditIcon />
-    //               </IconButton>
-    //               <IconButton aria-label="delete" color="primary">
-    //                 <RemoveRedEyeIcon />
-    //               </IconButton>
-    //               <IconButton aria-label="delete" color="primary">
-    //                 <DeleteIcon />
-    //               </IconButton>
-    //             </TableCell>
-    //           </TableRow>
-    //         ))}
-    //       </TableBody>
-
-    //       <TablePagination
-    //         sx={{ px: 2 }}
-    //         page={page}
-    //         component="div"
-    //         rowsPerPage={rowsPerPage}
-    //         count={merchantDetailsList.length}
-    //         onPageChange={handleChangePage}
-    //         rowsPerPageOptions={[5, 10, 25]}
-    //         onRowsPerPageChange={handleChangeRowsPerPage}
-    //         nextIconButtonProps={{ "aria-label": "Next Page" }}
-    //         backIconButtonProps={{ "aria-label": "Previous Page" }}
-    //       />
-    //     </Box>
-
-    //   </Card>
-    // </div>
-
-
-
-
     <div>
+      <div role="presentation">
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 1, ml: 1 }}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link
+              underline="hover"
+              sx={{ display: 'flex', alignItems: 'center' }}
+              color="text.primary"
+              href="/"
+            >
+              <HomeIcon sx={{ mr: 0.2 }} fontSize="inherit" />
+              Home
+            </Link>
+
+            <Typography
+              sx={{ display: 'flex', alignItems: 'center' }}
+              color="text.primary"
+            >
+              <ProductionQuantityLimitsTwoToneIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              Product List
+            </Typography>
+          </Breadcrumbs>
+
+        </Box>
+        {/* <Divider /> */}
+      </div>
+
       {isLoading && <Loader />}
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{ marginTop: 12 }}>
         <Card>
-          <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px">
+          <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px" >
             <CardHeader
               title="Product List"
               titleTypographyProps={{ variant: 'h6' }}
@@ -231,27 +193,35 @@ export default function ProductList() {
           </Box>
           <Divider />
 
+          <DeleteProductDialog
+            open={isCategoryDeleteDialogOpen}
+            id={selectedCategoryId}
+            onClose={handleDeletCategoryCloseDialog}
+            onAddCategory={(categoryName: string) => {
+              // Implement your add category logic here
+            }}
+          />
+
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 375 }}>
-              <Table stickyHeader aria-label='sticky table'>
-                <TableHead>
+            <TableContainer sx={{ maxHeight: 375, overflowY: 'auto' }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead sx={{ backgroundColor: '#f5f5f5', height: 60 }}>
                   <TableRow>
-                    <TableCell align="left" sx={{ minWidth: 1 }}>Id</TableCell>
-                    <TableCell align="center">Product Name</TableCell>
-                    <TableCell align="center">Category Name</TableCell>
-                    <TableCell align="center">Status</TableCell>
-                    <TableCell align="center">Action</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Category Name</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>SubCategory Name</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Product Name</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Product Image</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Product Price</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Product QTY</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Product Description</TableCell>
+                    <TableCell className="table-cell" sx={{ padding: '2px 4px', fontWeight: 'bold' }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody className="transactionTable-tablebody">
+                <TableBody>
                   {productList.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5}>
-                        <Typography
-                          variant="subtitle1"
-                          color="textSecondary"
-                          align="center"
-                        >
+                      <TableCell colSpan={8} align="center">
+                        <Typography variant="subtitle1" color="textSecondary">
                           No data available in table
                         </Typography>
                       </TableCell>
@@ -265,19 +235,27 @@ export default function ProductList() {
                       : productList
                     ).map((row, index) => (
                       <TableRow key={index}>
-                        <TableCell align="left" sx={{ padding: '8px 20px' }}> {row.productName}</TableCell>
-                        <TableCell align="center" sx={{ padding: '8px 20px' }}>{row.categoryName}</TableCell>
-                        <TableCell align="center" sx={{ padding: '8px 20px' }}>
-                          {row.status}
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.categoryName}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.subCategoryName}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.productName}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>
+                          <img
+                            src={row.productImage}
+                            alt="Product"
+                            style={{ maxWidth: '5vh', maxHeight: '5vh' }}
+                          />
                         </TableCell>
-                        <TableCell align="center" sx={{ padding: '4px 8px' }}>
-                          <IconButton aria-label="delete" color="primary">
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.productPrice}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.productQTY}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '2px 4px', }}>{row.productDescription}</TableCell>
+                        <TableCell className="table-cell" sx={{ padding: '4px 8px' }}>
+                          <IconButton aria-label="delete" color="primary" onClick={() => handleDeletCategoryOpenDialog(row.productId)}>
                             <DeleteIcon />
                           </IconButton>
-                          <IconButton aria-label="delete" color="primary">
+                          <IconButton aria-label="edit" color="primary">
                             <Edit />
                           </IconButton>
-                          <IconButton aria-label="delete" color="primary">
+                          <IconButton aria-label="view" color="primary">
                             <RemoveRedEyeRounded />
                           </IconButton>
                         </TableCell>
@@ -289,7 +267,7 @@ export default function ProductList() {
             </TableContainer>
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
-              component='div'
+              component="div"
               count={productList.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -297,7 +275,6 @@ export default function ProductList() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-
         </Card>
       </Grid>
     </div>

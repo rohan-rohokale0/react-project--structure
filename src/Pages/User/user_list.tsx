@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { getRequest } from "../../Services/httpservice";
 import axios, { AxiosError } from "axios";
 import { apiURL } from "../../Constant/ApiUrlConstant";
-import AddCategoryDialog from "./add_category";
-import { Edit, RemoveRedEyeRounded } from "@mui/icons-material";
+import { Edit, RemoveRedEyeRounded, SaveOutlined } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Card, CardHeader, Divider, Grid, IconButton, styled, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -20,16 +19,18 @@ import Loader from "../../Components/Carousel/loader";
 import Link from '@mui/material/Link';
 import HomeIcon from '@mui/icons-material/Home';
 import { Menu as MenuIcon, Dashboard as DashboardIcon, Category as CategoryIcon, Person as PersonIcon, ExitToApp as ExitToAppIcon, AccountCircle } from '@mui/icons-material';
-import ViewCategoryDialog from "./view_category";
-import DeleteCategoryDialog from "./delete_category";
-
+import AddCategoryDialog from "../Category/add_category";
+import ViewCategoryDialog from "../Category/view_category";
+import DeleteCategoryDialog from "../Category/delete_category";
+import GroupIcon from '@mui/icons-material/Group';
+import AddIcon from '@mui/icons-material/Add';
 export interface CategoryViewModel {
   categoryId: string;
   categoryName: string;
   subCategoryName: string;
 }
 
-export default function CategoryList() {
+export default function UserList() {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -146,8 +147,8 @@ export default function CategoryList() {
               sx={{ display: 'flex', alignItems: 'center' }}
               color="text.primary"
             >
-              <CategoryIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              Category List
+              <GroupIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              User List
             </Typography>
           </Breadcrumbs>
         </Box>
@@ -158,12 +159,12 @@ export default function CategoryList() {
         <Card>
           <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px">
             <CardHeader
-              title="Category List"
+              title="User List"
               titleTypographyProps={{ variant: 'h6' }}
               style={{ padding: 0 }}
             />
-            <Button variant="contained" size="small" onClick={handleOpenDialog}>
-              Add Category
+            <Button variant="contained"  startIcon={<AddIcon />} size="small" onClick={handleOpenDialog}>
+              Add User
             </Button>
           </Box>
           <Divider />
@@ -192,9 +193,6 @@ export default function CategoryList() {
               // Implement your add category logic here
             }}
           />
-
-
-
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 375 }}>
               <Table stickyHeader aria-label='sticky table'>

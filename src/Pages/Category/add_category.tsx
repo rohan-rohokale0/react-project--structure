@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Divider, Grid, Box, CardHeader, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Dialog, DialogActions, DialogContent, TextField, Button, Divider, Grid, Box, CardHeader, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import Loader from '../../Components/Carousel/loader';
 import { SaveOutlined } from '@mui/icons-material';
+import { AxiosResponse } from 'axios';
+import { apiURL } from '../../Constant/ApiUrlConstant';
+import { postRequest } from '../../Services/httpservice';
 
 interface AddCategoryDialogProps {
   open: boolean;
@@ -14,57 +16,43 @@ interface AddCategoryDialogProps {
 }
 
 const initialValues = {
-  email: "",
-  password: "",
+  categoryName: "",
+  subCategoryName: "",
 };
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(6, "Password must be 6 character length")
-    .required("Password is required!"),
-  email: Yup.string()
-    .email("Invalid Email address")
-    .required("Email is required!"),
+  categoryName: Yup.string()
+    .required("Category is required!"),
+  subCategoryName: Yup.string()
+    .required("Sub Category is required!"),
 });
 
 
 const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({ open, onClose, }) => {
-  const [categoryName, setCategoryName] = useState('');
+  // const [categoryName, setCategoryName] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const handleAdd = () => {
-    setCategoryName('');
-    onClose();
-  };
-
   const handleFormSubmit = async (values: any) => {
-    // setLoading(true);
-    // try {
-    //   const requestData = {
-    //     email: values.email,
-    //     password: values.password,
-    //   };
-    //   const url= process.env.REACT_APP_API_URL + apiURL.LOGIN;
-    // debugger
-    //   const axiosResponse: AxiosResponse<any> = await postRequest(
-    //     process.env.REACT_APP_API_URL + apiURL.LOGIN,
-    //     requestData
-    //   );
-    //   const LoginApiResponse: any = axiosResponse.data;
-    //   if (LoginApiResponse.success) {
-    //     toast.success("Login Sucessfully !!");
-    //     localStorage.setItem("Users", JSON.stringify(LoginApiResponse.resultData));
-    //     navigate("/home");
-    //   } else {
-    //     setLoading(false);
-    //     toast.error(LoginApiResponse.statusMessage);
-    //   }
-    //   setLoading(true);
-    // } catch (e: any) {
-    //   toast.error(e.message);
-    //   setLoading(false);
-    // }
+    debugger
+    setLoading(false);
+    try {
+      setLoading(true);
+      const requestData = {
+        categoryName: values.categoryName,
+        subCategoryName: values.subCategoryName,
+      };
+      const axiosResponse: AxiosResponse<any> = await postRequest(process.env.REACT_APP_API_URL + apiURL.ADD_CATEGORY, requestData);
+      const LoginApiResponse: any = axiosResponse.data;
+      if (LoginApiResponse.success) {
+        setLoading(false);
+        onClose();
+      } else {
+        setLoading(false);
+      }
+      setLoading(false);
+    } catch (e: any) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,14 +70,12 @@ const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({ open, onClose, })
             position: 'absolute',
             right: 1,
             top: 2,
-            // color: (theme) => theme.palette.grey[500],
           }}
         >
           <CloseIcon />
         </IconButton>
       </Box>
       <Divider />
-
       <DialogContent>
         <Formik
           onSubmit={handleFormSubmit}
@@ -109,15 +95,18 @@ const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({ open, onClose, })
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                   <TextField
-                    autoFocus
-                    label="Category Name"
-                    type="text"
                     fullWidth
                     size="small"
-                    name="Category Name"
+                    type="text"
+                    name="categoryName" // Ensure this matches initialValues
+                    label="Category Name"
                     variant="outlined"
-                    value={categoryName}
-                    onChange={(e) => setCategoryName(e.target.value)}
+                    onBlur={handleBlur}
+                    value={values.categoryName}
+                    onChange={handleChange}
+                    helperText={touched.categoryName && errors.categoryName}
+                    error={Boolean(errors.categoryName && touched.categoryName)}
+                    sx={{ mb: 2 }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -126,22 +115,34 @@ const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({ open, onClose, })
                     type="text"
                     fullWidth
                     size="small"
-                    name="SubCategory Name"
+                    name="subCategoryName" // Ensure this matches initialValues
                     variant="outlined"
+                    onBlur={handleBlur}
+                    value={values.subCategoryName}
+                    onChange={handleChange}
+                    helperText={touched.subCategoryName && errors.subCategoryName}
+                    error={Boolean(errors.subCategoryName && touched.subCategoryName)}
+                    sx={{ mb: 2 }}
                   />
                 </Grid>
               </Grid>
+              <DialogActions style={{ padding: "0px !important" }}>
+                <Button variant="contained" color="secondary" size="small" onClick={onClose}>Cancel</Button>
+                <Button
+                  variant="contained"
+                  sx={{ my: 0 }}
+                  startIcon={<SaveOutlined />}
+                  size="small"
+                  type="submit" // Ensure this is a submit button
+                >
+                  Save
+                </Button>
+              </DialogActions>
             </form>
           )}
         </Formik>
       </DialogContent>
       <Divider />
-      <DialogActions>
-        <Button variant="contained" color="secondary" size="small" onClick={onClose}>Cancel</Button>
-        <Button variant="contained" sx={{ my: 0 }} startIcon={<SaveOutlined />} size="small" onClick={handleAdd} >Save</Button>
-      </DialogActions>
-
-
     </Dialog>
   );
 };

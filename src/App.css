@@ -1,9 +1,8 @@
-.MerchanTitle
-{
+.MerchanTitle {
   margin-bottom: 20px;
 }
-#body
-{
+
+#body {
   background-color: "#f4f6f9" !important;
 }
 
@@ -16,17 +15,17 @@
 
 
 
-.homePageSlider img{
-  width : 100%;
+.homePageSlider img {
+  width: 100%;
 }
 
 
 
 
-.active
-{
-  color:'red';
+.active {
+  color: 'red';
 }
+
 /* .bg-color{
   background-color: #302874;
   position: absolute;
@@ -48,4 +47,47 @@
 
 apexcharts-canvas .apexcharts-toolbar svg[data-icon='download'] {
   display: none !important;
+}
+
+
+/* styles.css */
+.appBar {
+  height: 48px !important;
+  /* !important to override default styles */
+}
+
+.toolbar {
+  min-height: 48px !important;
+  /* !important to override default styles */
+  height: 48px !important;
+}
+
+/* styles.css */
+.table-container {
+  max-height: 375px;
+}
+
+.table-cell {
+  padding: 2px 2px !important;
+  text-align: center !important;
+  border-right: 1px solid rgba(224, 224, 224, 1) !important;
+  /* Vertical line */
+}
+
+.table-row {
+  border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
+}
+
+.img-cell img {
+  max-width: 5vh;
+  max-height: 5vh;
+}
+
+.last-column {
+  border-right: none;
+  /* Remove border from the last column */
+}
+
+.css-knqc4i-MuiDialogActions-root {
+  padding: 0px !important;
 }
